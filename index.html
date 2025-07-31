@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Rekod Kewangan Percetakan MPP</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e40af;
+            --secondary: #3b82f6;
+            --accent: #60a5fa;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f5f9;
+            color: #1e293b;
+        }
+        
+        .logo {
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+        
+        .btn {
+            transition: all 0.3s ease;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1e3a8a;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #2563eb;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #059669;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #dc2626;
+            transform: translateY(-2px);
+        }
+        
+        .form-control {
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            width: 100%;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        .card {
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .nav-link {
+            transition: all 0.3s ease;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(30, 64, 175, 0.1);
+        }
+        
+        .table-container {
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+            text-align: left;
+            padding: 1rem;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tr:hover {
+            background-color: #f8fafc;
+        }
+        
+        .search-filter-container {
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 640px) {
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            th, td {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div id="app" class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-md">
+            <div class="container mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center">
+                <div class="flex items-center mb-4 sm:mb-0">
+                    <i class="fas fa-print text-3xl text-blue-600 mr-3"></i>
+                    <h1 class="logo text-blue-900">Sistem Rekod Kewangan Percetakan MPP</h1>
+                </div>
+                <nav class="w-full sm:w-auto">
+                    <ul class="flex flex-wrap justify-center sm:justify-end gap-2">
+                        <li><a href="#home" class="nav-link text-blue-700 active"><i class="fas fa-home mr-2"></i>Utama</a></li>
+                        <li><a href="#add-record" class="nav-link text-blue-700"><i class="fas fa-plus-circle mr-2"></i>Tambah Rekod</a></li>
+                        <li><a href="#view-records" class="nav-link text-blue-700"><i class="fas fa-table mr-2"></i>Lihat Rekod</a></li>
+                        <li><a href="#login" class="nav-link text-blue-700"><i class="fas fa-sign-in-alt mr-2"></i>Login</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <!-- Home Page -->
+            <section id="home" class="page active">
+                <div class="text-center mb-12">
+                    <div class="bg-white rounded-lg shadow-lg p-8 max-w-3xl mx-auto">
+                        <i class="fas fa-print text-6xl text-blue-600 mb-6"></i>
+                        <h2 class="text-3xl font-bold text-blue-900 mb-4">Sistem Rekod Kewangan Percetakan MPP</h2>
+                        <p class="text-gray-700 mb-6 text-lg">
+                            Sistem ini direka khas untuk merekod dan menguruskan transaksi kewangan percetakan oleh Majlis Perwakilan Pelajar.
+                            Gunakan navigasi di atas untuk mengakses pelbagai fungsi sistem.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                            <div class="card p-6 bg-blue-50">
+                                <i class="fas fa-plus-circle text-3xl text-blue-600 mb-4"></i>
+                                <h3 class="text-xl font-semibold mb-2">Tambah Rekod</h3>
+                                <p class="text-gray-700">Catat transaksi percetakan baru dengan mudah dan pantas.</p>
+                            </div>
+                            <div class="card p-6 bg-green-50">
+                                <i class="fas fa-table text-3xl text-green-600 mb-4"></i>
+                                <h3 class="text-xl font-semibold mb-2">Lihat Rekod</h3>
+                                <p class="text-gray-700">Paparkan semua rekod dengan fungsi carian dan penapisan.</p>
+                            </div>
+                            <div class="card p-6 bg-purple-50">
+                                <i class="fas fa-print text-3xl text-purple-600 mb-4"></i>
+                                <h3 class="text-xl font-semibold mb-2">Cetak Rekod</h3>
+                                <p class="text-gray-700">Cetak rekod untuk tujuan dokumentasi dan arkib.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Add Record Page -->
+            <section id="add-record" class="page hidden">
+                <div class="card p-6 bg-white">
+                    <h2 class="text-2xl font-bold text-blue-900 mb-6 flex items-center">
+                        <i class="fas fa-plus-circle mr-3"></i>
+                        Tambah Rekod Kewangan Baru
+                    </h2>
+                    <form id="add-record-form">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="print-type" class="block text-gray-700 font-medium mb-2">Jenis Cetakan</label>
+                                <select id="print-type" class="form-control" required>
+                                    <option value="">Pilih jenis cetakan</option>
+                                    <option value="Buku Program">Buku Program</option>
+                                    <option value="Banner">Banner</option>
+                                    <option value="Flyer">Flyer</option>
+                                    <option value="Poster">Poster</option>
+                                    <option value="Sijil">Sijil</option>
+                                    <option value="Stiker">Stiker</option>
+                                    <option value="Lain-lain">Lain-lain</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="amount" class="block text-gray-700 font-medium mb-2">Jumlah Bayaran (RM)</label>
+                                <input type="number" id="amount" class="form-control" placeholder="Masukkan jumlah bayaran" step="0.01" required>
+                            </div>
+                            <div>
+                                <label for="date" class="block text-gray-700 font-medium mb-2">Tarikh</label>
+                                <input type="date" id="date" class="form-control" required>
+                            </div>
+                            <div>
+                                <label for="recipient" class="block text-gray-700 font-medium mb-2">Penerima</label>
+                                <input type="text" id="recipient" class="form-control" placeholder="Nama penerima" required>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <label for="notes" class="block text-gray-700 font-medium mb-2">Catatan (Pilihan)</label>
+                            <textarea id="notes" class="form-control" rows="3" placeholder="Masukkan catatan tambahan"></textarea>
+                        </div>
+                        <div class="mt-8 flex flex-wrap gap-4">
+                            <button type="submit" class="btn btn-primary flex items-center">
+                                <i class="fas fa-save mr-2"></i>
+                                Simpan Rekod
+                            </button>
+                            <button type="button" id="clear-form" class="btn btn-danger flex items-center">
+                                <i class="fas fa-trash-alt mr-2"></i>
+                                Kosongkan Borang
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- View Records Page -->
+            <section id="view-records" class="page hidden">
+                <div class="card p-6 bg-white">
+                    <h2 class="text-2xl font-bold text-blue-900 mb-6 flex items-center">
+                        <i class="fas fa-table mr-3"></i>
+                        Rekod Kewangan Percetakan
+                    </h2>
+                    
+                    <!-- Search and Filter -->
+                    <div class="search-filter-container mb-8">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                            <div>
+                                <label for="search" class="block text-gray-700 font-medium mb-2">Carian</label>
+                                <input type="text" id="search" class="form-control" placeholder="Cari mengikut jenis cetakan, penerima...">
+                            </div>
+                            <div>
+                                <label for="filter-type" class="block text-gray-700 font-medium mb-2">Jenis Cetakan</label>
+                                <select id="filter-type" class="form-control">
+                                    <option value="">Semua Jenis</option>
+                                    <option value="Buku Program">Buku Program</option>
+                                    <option value="Banner">Banner</option>
+                                    <option value="Flyer">Flyer</option>
+                                    <option value="Poster">Poster</option>
+                                    <option value="Sijil">Sijil</option>
+                                    <option value="Stiker">Stiker</option>
+                                    <option value="Lain-lain">Lain-lain</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="date-from" class="block text-gray-700 font-medium mb-2">Tarikh Dari</label>
+                                <input type="date" id="date-from" class="form-control">
+                            </div>
+                            <div>
+                                <label for="date-to" class="block text-gray-700 font-medium mb-2">Tarikh Hingga</label>
+                                <input type="date" id="date-to" class="form-control">
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            <button id="apply-filters" class="btn btn-secondary">
+                                <i class="fas fa-filter mr-2"></i>
+                                Terapkan Penapis
+                            </button>
+                            <button id="reset-filters" class="btn btn-danger">
+                                <i class="fas fa-sync-alt mr-2"></i>
+                                Tetapkan Semula
+                            </button>
+                            <button id="print-records" class="btn btn-success ml-auto">
+                                <i class="fas fa-print mr-2"></i>
+                                Cetak Rekod
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Records Table -->
+                    <div class="overflow-x-auto">
+                        <div id="no-records" class="text-center py-10 text-gray-500 hidden">
+                            <i class="fas fa-box-open text-6xl mb-4 opacity-50"></i>
+                            <h3 class="text-xl font-medium mb-2">Tiada rekod dijumpai</h3>
+                            <p>Tiada rekod kewangan percetakan telah direkodkan. Sila tambah rekod baru.</p>
+                        </div>
+                        <table id="records-table" class="min-w-full hidden">
+                            <thead>
+                                <tr>
+                                    <th>Bil.</th>
+                                    <th>Jenis Cetakan</th>
+                                    <th>Jumlah Bayaran (RM)</th>
+                                    <th>Tarikh</th>
+                                    <th>Penerima</th>
+                                    <th>Catatan</th>
+                                    <th>Tindakan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="records-body">
+                                <!-- Records will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Login Page -->
+            <section id="login" class="page hidden">
+                <div class="max-w-md mx-auto">
+                    <div class="card p-8 bg-white">
+                        <h2 class="text-2xl font-bold text-blue-900 mb-6 text-center flex items-center justify-center">
+                            <i class="fas fa-sign-in-alt mr-3"></i>
+                            Login Pentadbir MPP
+                        </h2>
+                        <form id="login-form">
+                            <div class="mb-6">
+                                <label for="username" class="block text-gray-700 font-medium mb-2">Nama Pengguna</label>
+                                <input type="text" id="username" class="form-control" placeholder="Masukkan nama pengguna" required>
+                            </div>
+                            <div class="mb-6">
+                                <label for="password" class="block text-gray-700 font-medium mb-2">Kata Laluan</label>
+                                <input type="password" id="password" class="form-control" placeholder="Masukkan kata laluan" required>
+                            </div>
+                            <div class="mb-6">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="remember" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="remember" class="ml-2 block text-gray-700">
+                                        Ingat saya
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-full flex items-center justify-center">
+                                <i class="fas fa-sign-in-alt mr-2"></i>
+                                Log Masuk
+                            </button>
+                        </form>
+                        <div id="login-message" class="mt-4 text-center hidden"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white shadow-inner mt-12">
+            <div class="container mx-auto px-4 py-6 text-center text-gray-600">
+                <p>&copy; 2023 Sistem Rekod Kewangan Percetakan MPP. Hak Cipta Terpelihara.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Data storage using localStorage
+        const STORAGE_KEY = 'mpp_printing_finance_records';
+        
+        // Get data from localStorage
+        function getData() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            return data ? JSON.parse(data) : [];
+        }
+        
+        // Save data to localStorage
+        function saveData(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+        
+        // Initialize data if empty
+        function initializeData() {
+            const data = getData();
+            if (data.length === 0) {
+                // Add some sample data
+                const sampleData = [
+                    {
+                        id: generateId(),
+                        printType: 'Buku Program',
+                        amount: 250.00,
+                        date: '2023-10-15',
+                        recipient: 'Ahmad bin Ali',
+                        notes: 'Program Sambutan Hari Kemerdekaan'
+                    },
+                    {
+                        id: generateId(),
+                        printType: 'Poster',
+                        amount: 80.00,
+                        date: '2023-10-20',
+                        recipient: 'Siti binti Abu',
+                        notes: 'Promosi Bengkel Kepimpinan'
+                    },
+                    {
+                        id: generateId(),
+                        printType: 'Flyer',
+                        amount: 45.50,
+                        date: '2023-10-25',
+                        recipient: 'Lee Chong Wei',
+                        notes: 'Majlis Penutupan Minggu Sukan'
+                    }
+                ];
+                saveData(sampleData);
+                return sampleData;
+            }
+            return data;
+        }
+        
+        // Generate unique ID
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+        
+        // Navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize data
+            let records = initializeData();
+            
+            // Navigation
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('.page');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Update active link
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show selected page
+                    const target = this.getAttribute('href').substring(1);
+                    pages.forEach(page => {
+                        page.classList.add('hidden');
+                        if (page.id === target) {
+                            page.classList.remove('hidden');
+                        }
+                    });
+                    
+                    // Refresh records if viewing records page
+                    if (target === 'view-records') {
+                        displayRecords();
+                    }
+                });
+            });
+            
+            // Add record form
+            const addRecordForm = document.getElementById('add-record-form');
+            addRecordForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const printType = document.getElementById('print-type').value;
+                const amount = parseFloat(document.getElementById('amount').value);
+                const date = document.getElementById('date').value;
+                const recipient = document.getElementById('recipient').value;
+                const notes = document.getElementById('notes').value;
+                
+                const newRecord = {
+                    id: generateId(),
+                    printType,
+                    amount,
+                    date,
+                    recipient,
+                    notes
+                };
+                
+                records.push(newRecord);
+                saveData(records);
+                
+                // Reset form
+                addRecordForm.reset();
+                
+                // Show success message
+                alert('Rekod berjaya ditambah!');
+            });
+            
+            // Clear form button
+            document.getElementById('clear-form').addEventListener('click', function() {
+                addRecordForm.reset();
+            });
+            
+            // Login form
+            const loginForm = document.getElementById('login-form');
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const loginMessage = document.getElementById('login-message');
+                
+                // Simple authentication (in real app, this would be more secure)
+                if (username === 'admin' && password === 'password') {
+                    loginMessage.className = 'mt-4 text-center text-green-600';
+                    loginMessage.textContent = 'Berjaya log masuk! Anda kini boleh mengakses semua fungsi pentadbir.';
+                    loginMessage.classList.remove('hidden');
+                    
+                    // Allow access to all pages
+                    setTimeout(() => {
+                        document.querySelector('a[href="#view-records"]').click();
+                    }, 1500);
+                } else {
+                    loginMessage.className = 'mt-4 text-center text-red-600';
+                    loginMessage.textContent = 'Nama pengguna atau kata laluan salah. Sila cuba lagi.';
+                    loginMessage.classList.remove('hidden');
+                }
+            });
+            
+            // Display records
+            function displayRecords(filterData = records) {
+                const recordsBody = document.getElementById('records-body');
+                const noRecords = document.getElementById('no-records');
+                const recordsTable = document.getElementById('records-table');
+                
+                // Clear existing records
+                recordsBody.innerHTML = '';
+                
+                if (filterData.length === 0) {
+                    noRecords.classList.remove('hidden');
+                    recordsTable.classList.add('hidden');
+                    return;
+                }
+                
+                noRecords.classList.add('hidden');
+                recordsTable.classList.remove('hidden');
+                
+                filterData.forEach((record, index) => {
+                    const row = document.createElement('tr');
+                    
+                    // Format amount to 2 decimal places
+                    const formattedAmount = record.amount.toFixed(2);
+                    
+                    // Format date to DD/MM/YYYY
+                    const dateParts = record.date.split('-');
+                    const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+                    
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${record.printType}</td>
+                        <td>RM ${formattedAmount}</td>
+                        <td>${formattedDate}</td>
+                        <td>${record.recipient}</td>
+                        <td>${record.notes || '-'}</td>
+                        <td>
+                            <button class="text-red-600 hover:text-red-800 delete-btn" data-id="${record.id}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    `;
+                    
+                    recordsBody.appendChild(row);
+                });
+                
+                // Add delete event listeners
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        if (confirm('Adakah anda pasti ingin memadam rekod ini?')) {
+                            records = records.filter(record => record.id !== id);
+                            saveData(records);
+                            displayRecords();
+                        }
+                    });
+                });
+            }
+            
+            // Initial display
+            displayRecords();
+            
+            // Apply filters
+            document.getElementById('apply-filters').addEventListener('click', function() {
+                const searchTerm = document.getElementById('search').value.toLowerCase();
+                const filterType = document.getElementById('filter-type').value;
+                const dateFrom = document.getElementById('date-from').value;
+                const dateTo = document.getElementById('date-to').value;
+                
+                let filteredRecords = records;
+                
+                // Apply search
+                if (searchTerm) {
+                    filteredRecords = filteredRecords.filter(record => 
+                        record.printType.toLowerCase().includes(searchTerm) ||
+                        record.recipient.toLowerCase().includes(searchTerm)
+                    );
+                }
+                
+                // Apply type filter
+                if (filterType) {
+                    filteredRecords = filteredRecords.filter(record => record.printType === filterType);
+                }
+                
+                // Apply date filters
+                if (dateFrom) {
+                    filteredRecords = filteredRecords.filter(record => record.date >= dateFrom);
+                }
+                
+                if (dateTo) {
+                    filteredRecords = filteredRecords.filter(record => record.date <= dateTo);
+                }
+                
+                displayRecords(filteredRecords);
+            });
+            
+            // Reset filters
+            document.getElementById('reset-filters').addEventListener('click', function() {
+                document.getElementById('search').value = '';
+                document.getElementById('filter-type').value = '';
+                document.getElementById('date-from').value = '';
+                document.getElementById('date-to').value = '';
+                
+                displayRecords();
+            });
+            
+            // Print records
+            document.getElementById('print-records').addEventListener('click', function() {
+                const printWindow = window.open('', '_blank');
+                const currentDate = new Date().toLocaleDateString('ms-MY');
+                
+                let tableRows = '';
+                records.forEach((record, index) => {
+                    const formattedAmount = record.amount.toFixed(2);
+                    const dateParts = record.date.split('-');
+                    const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+                    
+                    tableRows += `
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${index + 1}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">${record.printType}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">RM ${formattedAmount}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">${formattedDate}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">${record.recipient}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">${record.notes || '-'}</td>
+                        </tr>
+                    `;
+                });
+                
+                const totalAmount = records.reduce((sum, record) => sum + record.amount, 0).toFixed(2);
+                
+                const printContent = `
+                    <html>
+                    <head>
+                        <title>Rekod Kewangan Percetakan MPP</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 20px; }
+                            .header { text-align: center; margin-bottom: 20px; }
+                            .header h1 { margin: 0; color: #1e40af; }
+                            .header p { margin: 5px 0; color: #64748b; }
+                            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                            th { background-color: #1e40af; color: white; text-align: left; padding: 10px; }
+                            td { border: 1px solid #ddd; padding: 8px; }
+                            tr:nth-child(even) { background-color: #f8fafc; }
+                            .total { font-weight: bold; text-align: right; margin-top: 20px; padding: 10px; background-color: #f1f5f9; }
+                            .footer { text-align: center; margin-top: 30px; color: #64748b; font-size: 0.9em; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="header">
+                            <h1>Sistem Rekod Kewangan Percetakan MPP</h1>
+                            <p>Laporan Rekod Kewangan</p>
+                            <p>Tarikh Cetakan: ${currentDate}</p>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Bil.</th>
+                                    <th>Jenis Cetakan</th>
+                                    <th>Jumlah Bayaran (RM)</th>
+                                    <th>Tarikh</th>
+                                    <th>Penerima</th>
+                                    <th>Catatan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${tableRows}
+                            </tbody>
+                        </table>
+                        
+                        <div class="total">
+                            JUMLAH KESELURUHAN: RM ${totalAmount}
+                        </div>
+                        
+                        <div class="footer">
+                            Laporan ini dicetak melalui Sistem Rekod Kewangan Percetakan MPP
+                        </div>
+                    </body>
+                    </html>
+                `;
+                
+                printWindow.document.write(printContent);
+                printWindow.document.close();
+                printWindow.print();
+            });
+            
+            // Set today's date as default for add record form
+            document.getElementById('date').valueAsDate = new Date();
+        });
+    </script>
+</body>
+</html>
+```

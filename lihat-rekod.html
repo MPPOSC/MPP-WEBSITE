@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lihat Rekod - Sistem Rekod Kewangan Percetakan MPP</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e40af;
+            --secondary: #3b82f6;
+            --accent: #60a5fa;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f5f9;
+            color: #1e293b;
+        }
+        
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .btn {
+            transition: all 0.3s ease;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1e3a8a;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #2563eb;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #dc2626;
+            transform: translateY(-2px);
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .form-control {
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            width: 100%;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        .card {
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+        
+        .search-filter-container {
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        .table-container {
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+            text-align: left;
+            padding: 1rem;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tr:hover {
+            background-color: #f8fafc;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            opacity: 0.3;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 640px) {
+            .search-filter-container {
+                padding: 1rem;
+            }
+            
+            th, td {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-md">
+            <div class="container mx-auto px-4 py-4 flex items-center">
+                <a href="index.html" class="text-blue-700 hover:text-blue-900 mr-6">
+                    <i class="fas fa-arrow-left mr-2"></i>Kembali
+                </a>
+                <i class="fas fa-table mr-3 text-2xl text-blue-600"></i>
+                <h1 class="logo text-blue-900">Lihat Rekod Kewangan</h1>
+            </div>
+        </header>
+
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <div class="card">
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold text-blue-900 mb-6 flex items-center">
+                        <i class="fas fa-list mr-3"></i>
+                        Senarai Rekod Kewangan Percetakan
+                    </h2>
+                    
+                    <!-- Search and Filter -->
+                    <div class="search-filter-container">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div>
+                                <label for="search-student" class="block text-gray-700 font-medium mb-2">Carian Nama Pelajar</label>
+                                <input type="text" id="search-student" class="form-control" placeholder="Cari mengikut nama pelajar...">
+                            </div>
+                            <div>
+                                <label for="filter-type" class="block text-gray-700 font-medium mb-2">Jenis Cetakan</label>
+                                <select id="filter-type" class="form-control">
+                                    <option value="">Semua Jenis</option>
+                                    <option value="Hitam Putih">Hitam Putih</option>
+                                    <option value="Berwarna">Berwarna</option>
+                                    <option value="Binding">Binding</option>
+                                    <option value="Lain-lain">Lain-lain</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="filter-date" class="block text-gray-700 font-medium mb-2">Tarikh Transaksi</label>
+                                <input type="date" id="filter-date" class="form-control">
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            <button id="apply-filters" class="btn btn-primary flex items-center">
+                                <i class="fas fa-filter mr-2"></i>
+                                Terapkan Penapis
+                            </button>
+                            <button id="reset-filters" class="btn btn-secondary flex items-center">
+                                <i class="fas fa-sync-alt mr-2"></i>
+                                Tetapkan Semula
+                            </button>
+                            <a href="cetak-rekod.html" class="btn btn-primary ml-auto flex items-center">
+                                <i class="fas fa-print mr-2"></i>
+                                Cetak Rekod
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Records Table -->
+                    <div class="table-container">
+                        <div id="empty-state" class="empty-state">
+                            <i class="fas fa-box-open"></i>
+                            <h3 class="text-xl font-medium mb-2">Tiada rekod dijumpai</h3>
+                            <p>Belum ada rekod kewangan percetakan. Sila tambah rekod baru terlebih dahulu.</p>
+                        </div>
+                        
+                        <div id="records-container" style="display: none;">
+                            <div class="flex justify-between items-center p-4 bg-gray-50 border-b">
+                                <h3 class="font-semibold text-gray-700">
+                                    <span id="total-records">0</span> rekod dijumpai
+                                </h3>
+                                <div class="text-sm text-gray-500">
+                                    Jumlah keseluruhan: <span id="total-amount" class="font-semibold text-blue-600">RM 0.00</span>
+                                </div>
+                            </div>
+                            
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Bil.</th>
+                                        <th>Nama Pelajar</th>
+                                        <th>Kelas / Program</th>
+                                        <th>Jenis Cetakan</th>
+                                        <th>Kuantiti</th>
+                                        <th>Harga Seunit (RM)</th>
+                                        <th>Jumlah (RM)</th>
+                                        <th>Tarikh</th>
+                                        <th>Tindakan</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="records-body">
+                                    <!-- Records will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white shadow-inner mt-12">
+            <div class="container mx-auto px-4 py-6 text-center text-gray-600">
+                <p>&copy; 2023 Sistem Rekod Kewangan Percetakan MPP. Hak Cipta Terpelihara.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Data storage using localStorage
+        const STORAGE_KEY = 'mpp_printing_finance_records';
+        
+        // Get data from localStorage
+        function getData() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            return data ? JSON.parse(data) : [];
+        }
+        
+        // Format date to DD/MM/YYYY
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+        }
+        
+        // Display records
+        function displayRecords(records) {
+            const recordsBody = document.getElementById('records-body');
+            const emptyState = document.getElementById('empty-state');
+            const recordsContainer = document.getElementById('records-container');
+            const totalRecords = document.getElementById('total-records');
+            const totalAmount = document.getElementById('total-amount');
+            
+            // Clear existing records
+            recordsBody.innerHTML = '';
+            
+            if (records.length === 0) {
+                emptyState.style.display = 'block';
+                recordsContainer.style.display = 'none';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            recordsContainer.style.display = 'block';
+            
+            // Calculate totals
+            const totalSum = records.reduce((sum, record) => sum + record.totalAmount, 0);
+            totalRecords.textContent = records.length;
+            totalAmount.textContent = `RM ${totalSum.toFixed(2)}`;
+            
+            // Sort records by date (newest first)
+            records.sort((a, b) => new Date(b.transactionDate) - new Date(a.transactionDate));
+            
+            // Add records to table
+            records.forEach((record, index) => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${record.studentName}</td>
+                    <td>${record.program}</td>
+                    <td>${record.printType}</td>
+                    <td class="text-center">${record.quantity}</td>
+                    <td class="text-right">${record.pricePerUnit.toFixed(2)}</td>
+                    <td class="text-right font-semibold">${record.totalAmount.toFixed(2)}</td>
+                    <td>${formatDate(record.transactionDate)}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm delete-btn" data-id="${record.id}">
+                            <i class="fas fa-trash-alt mr-1"></i> Padam
+                        </button>
+                    </td>
+                `;
+                
+                recordsBody.appendChild(row);
+            });
+            
+            // Add delete event listeners
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    if (confirm('Adakah anda pasti ingin memadam rekod ini? Tindakan ini tidak boleh dibatalkan.')) {
+                        const records = getData();
+                        const updatedRecords = records.filter(record => record.id !== id);
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedRecords));
+                        displayRecords(filterRecords());
+                    }
+                });
+            });
+        }
+        
+        // Filter records
+        function filterRecords() {
+            const records = getData();
+            const searchTerm = document.getElementById('search-student').value.toLowerCase();
+            const filterType = document.getElementById('filter-type').value;
+            const filterDate = document.getElementById('filter-date').value;
+            
+            return records.filter(record => {
+                const matchesSearch = !searchTerm || record.studentName.toLowerCase().includes(searchTerm);
+                const matchesType = !filterType || record.printType === filterType;
+                const matchesDate = !filterDate || record.transactionDate === filterDate;
+                
+                return matchesSearch && matchesType && matchesDate;
+            });
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initial display
+            displayRecords(filterRecords());
+            
+            // Apply filters
+            document.getElementById('apply-filters').addEventListener('click', function() {
+                displayRecords(filterRecords());
+            });
+            
+            // Reset filters
+            document.getElementById('reset-filters').addEventListener('click', function() {
+                document.getElementById('search-student').value = '';
+                document.getElementById('filter-type').value = '';
+                document.getElementById('filter-date').value = '';
+                
+                displayRecords(filterRecords());
+            });
+            
+            // Auto-update when filters change (optional)
+            document.getElementById('search-student').addEventListener('input', function() {
+                displayRecords(filterRecords());
+            });
+        });
+    </script>
+</body>
+</html>
